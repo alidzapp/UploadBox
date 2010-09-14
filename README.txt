@@ -1,0 +1,1 @@
+Please first change database settings at includes/config.php
