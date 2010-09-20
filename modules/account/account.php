@@ -153,9 +153,16 @@ SQL;
 						);
 						$message_sent = account_send_mail('UploadBox.com registration: email validation',
 							urldecode($email_address), $message_content);
+						if (!$message_sent) {
+							$query = <<<SQL
+DELETE FROM registration_keys
+WHERE registration_email = '$email_address'
+SQL;
+							db_query($query);
+						}
 						return account_print_message(($message_sent == 1)
 							? ("Message sent to " . urldecode($email_address) . ". Please check you email box")
-							: "Message does not send due to internal errors.");
+							: "Message does not sent due to internal errors. Please, try to register a bit later.");
 					}
 				}
 			}
@@ -253,7 +260,7 @@ SQL;
 From: donotreply@uploadbox.com
 X-Mailer: PHP
 MAIL;
-		return mail($to, $subject, $content, $headers);
+		return @mail($to, $subject, $content, $headers);
 	}
 
 	function account_generate_key() {

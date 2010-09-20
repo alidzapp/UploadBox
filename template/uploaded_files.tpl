@@ -7,7 +7,7 @@
 			if (f_all) {
 				f_all.onclick = function() {
 					if(!select_checkboxes(f_all.checked, document.getElementById('files_table'))) {
-						alert("No any files were uploaded");
+						alert("No any files were uploaded"); // should not happen
 					}
 				}
 			}

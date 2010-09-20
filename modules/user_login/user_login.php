@@ -89,28 +89,45 @@ SQL;
 		global $active_user;
 		clear_cookies_if_needed($path);
 		user_login_active_user();
-		if ($active_user) {
-			$user = get_user_details($active_user['user_id']);
-			return array(
-				"module"	=>	array(
-					"email_address"	=>	urldecode($user['user_email_address'])
-				),
-				"title"		=>	"Welcome",
-				"template"	=>	"template/login_details.tpl"
-			);
-		}
-		else {
-			return array(
-				"module"	=>	array(
-					"last_email"			=>	"",
-					"last_password"			=>	"",
-					"login-email-class"		=>	"",
-					"login-password-class"	=>	""
-				),
-				"title"		=>	"Introduce yourself to system",
-				"template"	=>	"template/login_box.tpl"
-			);
-		}
+        $pattern = "/user\/(?P<action>login|profile)\/(?P<other>[^\/]*)/i";
+        if(preg_match_all($pattern, $path, $matches)) {
+			$action = $matches['action'][0];
+			if ($action == 'profile') {
+				$user_id = trim($matches['other'][0]);
+				if ($user_id) {
+					return array(
+						"module"	=>	array(
+						),
+						"title"		=>	"User dertails",
+						"template"	=>	"template/user_profile.tpl"
+					);
+				}
+			}
+			else {
+				if ($active_user) {
+					$user = get_user_details($active_user['user_id']);
+					return array(
+				    	"module"	=>	array(
+						   "email_address"	=>	urldecode($user['user_email_address'])
+						),
+						"title"		=>	"Welcome",
+						"template"	=>	"template/login_details.tpl"
+					);
+				}
+				else {
+					return array(
+						"module"	=>	array(
+							"last_email"			=>	"",
+							"last_password"			=>	"",
+							"login-email-class"		=>	"",
+							"login-password-class"	=>	""
+						),
+						"title"		=>	"Introduce yourself to system",
+						"template"	=>	"template/login_box.tpl"
+					);
+				}
+			}
+        }
 	}
 
 	function load_user($email, $password) {

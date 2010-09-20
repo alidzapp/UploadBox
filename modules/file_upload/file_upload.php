@@ -255,7 +255,7 @@ SQL;
 						$error = "The uploaded file exceeds max filesize (" . ini_get("upload_max_filesize") . ").";
 					break;
 					default:
-						$error = "The uploaded file was not uploaded during some problems (code: " . $_FILES['upload_file']['error'] . ").";
+						$error = "The uploaded file was not uploaded due to internal problems (code: " . $_FILES['upload_file']['error'] . ").";
 				}
 				$error_result['module']['error'] = $error;
 				return $error_result;
@@ -345,7 +345,7 @@ SQL;
 		if (file_exists($file_name)) {
 			$file_size = filesize($file_name);
 			$units = array("B","kB","MB","GB","TB","PB","EB","ZB","YB");
-			$c = 0; $p = 0;
+			$c = 0; $p = 1;
 			if(!$p && $p !== 0) {
 				foreach($units as $k => $u) {
 					if(($file_size / pow(1024, $k)) >= 1) {
